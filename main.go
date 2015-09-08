@@ -13,7 +13,8 @@ func main() {
 	logger := lager.NewLogger("garden-lame")
 	logger.RegisterSink(lager.NewWriterSink(os.Stdout, lager.DEBUG))
 
-	backend := lameBackend{logger: logger, Client: &lameClient{logger: logger}}
+	client := NewLameClient(logger)
+	backend := lameBackend{logger: logger, Client: client}
 	srv := server.New("tcp", ":3000", 5*time.Minute, &backend, logger)
 	srv.Start()
 

@@ -2,11 +2,17 @@ package main
 
 import (
 	"github.com/cloudfoundry-incubator/garden"
+	"github.com/cromega/garden-lame/executor"
 	"github.com/pivotal-golang/lager"
 )
 
 type lameClient struct {
-	logger lager.Logger
+	logger   lager.Logger
+	executor *executor.Executor
+}
+
+func NewLameClient(logger lager.Logger) *lameClient {
+	return &lameClient{logger: logger, executor: executor.NewExecutor()}
 }
 
 func (c *lameClient) Ping() error {
