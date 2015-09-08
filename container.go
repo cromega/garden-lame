@@ -2,11 +2,17 @@ package main
 
 import (
 	"github.com/cloudfoundry-incubator/garden"
+	"github.com/cromega/garden-lame/executor"
 	"io"
 	"os"
 )
 
 type lameContainer struct {
+	executor *executor.Executor
+}
+
+func NewLameContainer(handle string) *lameContainer {
+	return &lameContainer{executor: executor.NewExecutor()}
 }
 
 func (c *lameContainer) Handle() string {
@@ -67,7 +73,8 @@ func (c *lameContainer) NetOut(netOutRule garden.NetOutRule) error {
 	return nil
 }
 
-func (c *lameContainer) Run(garden.ProcessSpec, garden.ProcessIO) (garden.Process, error) {
+func (c *lameContainer) Run(proc garden.ProcessSpec, io garden.ProcessIO) (garden.Process, error) {
+	c.executor.Start(proc.Path)
 	return &lameProcess{}, nil
 }
 

@@ -2,17 +2,16 @@ package main
 
 import (
 	"github.com/cloudfoundry-incubator/garden"
-	"github.com/cromega/garden-lame/executor"
 	"github.com/pivotal-golang/lager"
 )
 
 type lameClient struct {
-	logger   lager.Logger
-	executor *executor.Executor
+	logger     lager.Logger
+	containers map[string]*lameContainer
 }
 
 func NewLameClient(logger lager.Logger) *lameClient {
-	return &lameClient{logger: logger, executor: executor.NewExecutor()}
+	return &lameClient{logger: logger, containers: make(map[string]*lameContainer)}
 }
 
 func (c *lameClient) Ping() error {
@@ -23,8 +22,10 @@ func (c *lameClient) Capacity() (garden.Capacity, error) {
 	return garden.Capacity{}, nil
 }
 
-func (c *lameClient) Create(garden.ContainerSpec) (garden.Container, error) {
-	return &lameContainer{}, nil
+func (c *lameClient) Create(spec garden.ContainerSpec) (garden.Container, error) {
+	container := NewLameContainer(spec.Handle)
+	c.containers[spec.Handle] = container
+	return container, nil
 }
 
 func (c *lameClient) Destroy(handle string) error {
