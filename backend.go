@@ -1,22 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"github.com/cloudfoundry-incubator/garden"
+	"github.com/pivotal-golang/lager"
 	"time"
 )
 
 type lameBackend struct {
 	garden.Client
+	logger lager.Logger
 }
 
 func (b *lameBackend) Start() error {
-	fmt.Println("backend start")
+	b.logger.Info("backend-start")
 	return nil
 }
 
 func (b *lameBackend) Stop() {
-	fmt.Println("backend stop")
+	b.logger.Info("backend-stop")
 }
 
 func (b *lameBackend) GraceTime(garden.Container) time.Duration {

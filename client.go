@@ -2,9 +2,11 @@ package main
 
 import (
 	"github.com/cloudfoundry-incubator/garden"
+	"github.com/pivotal-golang/lager"
 )
 
 type lameClient struct {
+	logger lager.Logger
 }
 
 func (c *lameClient) Ping() error {
@@ -24,6 +26,7 @@ func (c *lameClient) Destroy(handle string) error {
 }
 
 func (c *lameClient) Containers(garden.Properties) ([]garden.Container, error) {
+	c.logger.Info("containers")
 	return nil, nil
 }
 
